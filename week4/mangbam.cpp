@@ -48,31 +48,6 @@ Node* search(int key) {
     return nullptr;
 }
 
-// Xoa phan tu theo key
-void removeKey(int key) {
-    int index = hashFunction(key);
-    Node* p = table[index];
-    Node* prev = nullptr;
-
-    while (p != nullptr) {
-        if (p->key == key) {
-            if (prev == nullptr)
-                table[index] = p->next;
-            else
-                prev->next = p->next;
-
-            delete p;
-            cout << "Da xoa key " << key << '\n';
-            return;
-        }
-
-        prev = p;
-        p = p->next;
-    }
-
-    cout << "Khong tim thay key " << key << '\n';
-}
-
 // In mang bam
 void display() {
     for (int i = 0; i < SIZE; i++) {
@@ -125,13 +100,6 @@ int main() {
     } else {
         cout << "Khong tim thay\n";
     }
-
-    cout << '\n';
-    removeKey(22);
-
-    cout << "\nMang bam sau khi xoa:\n";
-    display();
-
     clearTable();
     return 0;
 }
