@@ -1,45 +1,54 @@
+
 #include <iostream>
 using namespace std;
 
 const int SIZE = 10;
 
-struct Node {
+class Node {
+public:
+    int data;
     int key;
     Node* next;
+
+    Node(int d, int k) {
+        data = d;
+        key = k;
+        next = nullptr;
+    }
 };
 
 Node* table[SIZE] = {nullptr};
 
-// Hàm băm
+// Ham bam
 int hashFunction(int key) {
     return key % SIZE;
 }
 
-// Thêm phần tử
-void insert(int key) {
+// Them phan tu
+void insert(int data, int key) {
     int index = hashFunction(key);
 
-    Node* p = new Node;
-    p->key = key;
+    Node* p = new Node(data, key);
     p->next = table[index];
     table[index] = p;
 }
 
-// Tìm kiếm phần tử
-bool search(int key) {
+// Tim kiem theo key
+Node* search(int key) {
     int index = hashFunction(key);
     Node* p = table[index];
 
     while (p != nullptr) {
         if (p->key == key)
-            return true;
+            return p;
+
         p = p->next;
     }
 
-    return false;
+    return nullptr;
 }
 
-// Xóa phần tử
+// Xoa phan tu theo key
 void removeKey(int key) {
     int index = hashFunction(key);
     Node* p = table[index];
@@ -53,7 +62,7 @@ void removeKey(int key) {
                 prev->next = p->next;
 
             delete p;
-            cout << "Da xoa " << key << '\n';
+            cout << "Da xoa key " << key << '\n';
             return;
         }
 
@@ -61,10 +70,10 @@ void removeKey(int key) {
         p = p->next;
     }
 
-    cout << "Khong tim thay " << key << '\n';
+    cout << "Khong tim thay key " << key << '\n';
 }
 
-// In mảng băm
+// In mang bam
 void display() {
     for (int i = 0; i < SIZE; i++) {
         cout << i << ": ";
@@ -72,7 +81,9 @@ void display() {
         Node* p = table[i];
 
         while (p != nullptr) {
-            cout << p->key << " -> ";
+            cout << "(data=" << p->data
+                 << ", key=" << p->key << ") -> ";
+
             p = p->next;
         }
 
@@ -80,7 +91,7 @@ void display() {
     }
 }
 
-// Giải phóng bộ nhớ
+// Giai phong bo nho
 void clearTable() {
     for (int i = 0; i < SIZE; i++) {
         Node* p = table[i];
@@ -96,19 +107,26 @@ void clearTable() {
 }
 
 int main() {
-    insert(12);
-    insert(22);
-    insert(15);
-    insert(32);
-    insert(7);
+    insert(100, 12);
+    insert(200, 22);
+    insert(150, 15);
+    insert(300, 32);
+    insert(70, 7);
 
     cout << "Mang bam:\n";
     display();
 
-    cout << "\nTim 22: ";
-    cout << (search(22) ? "Tim thay" : "Khong tim thay");
+    cout << "\nTim key 22:\n";
+    Node* p = search(22);
 
-    cout << "\n\n";
+    if (p != nullptr) {
+        cout << "Tim thay: data = " << p->data
+             << ", key = " << p->key << '\n';
+    } else {
+        cout << "Khong tim thay\n";
+    }
+
+    cout << '\n';
     removeKey(22);
 
     cout << "\nMang bam sau khi xoa:\n";
@@ -117,3 +135,4 @@ int main() {
     clearTable();
     return 0;
 }
+
